@@ -33,12 +33,12 @@ function afficherCheck( $valeurAttendue ) {
             </p>
             <p>
                 <label for="email">Email :</label>
-                <input type="email" name="email" id="email" value=""/>
+                <input type="email" name="email" id="email" value="<?php afficherPost('email'); ?>"/>
                 
             </p>
             <p>
                 <label for="mot_de_passe">Mot de passe :</label>
-                <input type="password" name="mot_de_passe" id="mot_de_passe" value="" />
+                <input type="password" name="mot_de_passe" id="mot_de_passe" value="<?php afficherPost('mot_de_passe'); ?>"/>
                 
             </p>
             <p>

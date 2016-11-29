@@ -6,6 +6,7 @@ use Model\UtilisateursModel;
 use Model\UsersModel;
 use W\Security\AuthentificationModel;
 use Respect\Validation\Validator as v;
+use Respect\Validation\Exceptions\NestedValidationException;
 
 
 class UsersController extends BaseController
@@ -102,11 +103,39 @@ class UsersController extends BaseController
 				'mot_de_passe' => v::length(3,20)->noWhiteSpace()->alnum()->setName('Mot de Passe'),
 				'avatar' => v::optional(v::image()->size('1MB')->uploaded())
 			);
+			
 
-		}
+			$datas = $_POST;
 
+			foreach ($Validators as $field => $validator){
+
+				//La methode assert renvoie une exeption de type NESTEDVALIDATIONEXCEPTION qui nous permet de récupérer le ou les messages d'erreurs en cas d'erreurs.
+
+				try{
+					
+				//On essaye de valider la donnée et si une exeption se produit le bloc cath sera executé ; 
+
+				$validator->assert($datas[$field]);
+
+				}catch(NestedValidationException $ex){
+
+					$fullMessage = $ex->getFullMessage();
+
+					$this->getFlashMessenger()->error($fullMessage);
+
+				}//Fin try/Catch
+
+			}//Fin foreach
+
+		}//Fin $post
+
+
+
+		//je parcours la liste de mes validateurs, en récupérant aussi le nom du champs en clées.
 		$this->show('users/register');
-	}
+
+
+	}//Fin fonction 
 
 
 }
