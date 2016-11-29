@@ -5,6 +5,7 @@ namespace Controller;
 use Model\UtilisateursModel;
 use Model\UsersModel;
 use W\Security\AuthentificationModel;
+use Respect\Validation\Validator as v;
 
 
 class UsersController extends BaseController
@@ -91,6 +92,19 @@ class UsersController extends BaseController
 
 
 	public function register(){
+
+		if(!empty($_POST)){
+
+			$Validators = array(
+
+				'pseudo' => v::length(3,50)->alnum()->noWhiteSpace()->setName('Nom d\'utilisateur'),
+				'email'  => v::email()->setName('Email'),
+				'mot_de_passe' => v::length(3,20)->noWhiteSpace()->alnum()->setName('Mot de Passe'),
+				'avatar' => v::optional(v::image()->size('1MB')->uploaded())
+			);
+
+		}
+
 		$this->show('users/register');
 	}
 
