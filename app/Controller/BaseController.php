@@ -20,7 +20,7 @@ class BaseController extends Controller
 	public function __construct(){
 
 
-		//Je stock dans la variable de class engine une instance de league\plates\engine alors que cetet instance etait crée directement dans la méthode show() de controller.
+		//Je stock dans la variable de class engine une instance de league\plates\engine alors que cette instance etait crée directement dans la méthode show() de controller.
 
 		$this->engine = new \League\Plates\Engine(self::PATH_VIEWS);
 
@@ -56,11 +56,6 @@ class BaseController extends Controller
 	}
 
 
-	/**
-	* Cette fonction sert à ajouter toutes les vues qui seront disponible dans toutes
-	* les vues fabriquée par $this->engine (donc par le base controller).
-	* Exemple : Pour ajouter une liste d'utilisateur à mes vues, j'utilise $this->addGlobalData(array('users' => $users));
-	*/
 
 	public function addGlobalData(array $datas){
 		$this->engine->addData($datas);
@@ -68,12 +63,12 @@ class BaseController extends Controller
 
 }
 
-/*
-	Commentaires :
-
-		> On instancie un nouveau model et on s'en sert pour instancier tous nos nouveaux Salons.
-
-		> 
-
-
-*/
+	/**
+	* Commentaires :
+	*
+	*	> On instancie un nouveau model et on s'en sert pour instancier tous nos nouveaux Salons.
+	*
+	* 	> Cette fonction sert à ajouter toutes les vues qui seront disponible dans toutes
+	* 	  les vues fabriquée par $this->engine (donc par le base controller).
+	* 	  Exemple : Pour ajouter une liste d'utilisateur à mes vues, j'utilise $this->addGlobalData(array('users' => $users));
+	*/
