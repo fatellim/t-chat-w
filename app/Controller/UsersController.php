@@ -45,18 +45,20 @@ class UsersController extends BaseController
 
 		//Si le pseudo est vide on ajoute un message d'erreur .
 					if(empty($_POST['pseudo'])){
-						var_dump($_POST);
+
+						$this->getFlashMessenger()->error('veuillez rentrer un pseudo');
 					}
 
 		//Si le mot de passe est vide on ajoute un message d'erreur
 					if(empty($_POST['mdp'])){
 
+					$this->getFlashMessenger()->error('veuillez rentrer un Mot de passe');
 
 					}
 
 					$auth = new AuthentificationModel();
 
-					if(!empty($_POST['pseudo']) && !empty($_POST['mot_de_passe'])){
+					if(!$this->getFlashMessenger()->hasErrors()){
 
 						$idUser = $auth->isValidLoginInfo($_POST['pseudo'], $_POST['mot_de_passe']);
 
@@ -69,6 +71,9 @@ class UsersController extends BaseController
 							$auth->logUserIn($userInfos);
 							$this->redirectToRoute('default_home');
 
+						}else{
+
+							$this->getFlashMessenger()->error('Vos informations de connexion sont incorrect !');
 						}
 
 					}
@@ -83,5 +88,11 @@ class UsersController extends BaseController
 		$auth->logUserOut();
 		$this->redirectToRoute('login');
 	}
+
+
+	public function register(){
+		$this->show('users/register');
+	}
+
 
 }
