@@ -6,18 +6,18 @@
 
 <?php $fmsg->display(); ?>
 
-<form action="<?php echo $this->url('login'); ?>" method="post">
+<form action="<?php echo $this->url('login'); ?>" method="POST">
     <p>
         <label for="pseudo">
             Veuillez renseigner un pseudo :
         </label>
-        <input type="text" name="pseudo" id="pseudo" value="<?php echo isset($datas['pseudo'])? $datas['pseudo'] : '' ?>"/>
+        <input type="text" name="pseudo" id="pseudo" value="<?php echo isset($datas['pseudo']) ? $datas['pseudo'] : '' ?>"/>
     </p>
     <p>
         <label for="pass">
             Veuillez renseigner un mot de passe :
         </label>
-        <input type="password" name="mot_de_passe" id="pass" />
+        <input type="password" name="mot_de_passe"  value="<?php echo isset($datas['mot_de_passe']) ? $datas['mot_de_passe'] : '' ?>" id="pass" />
     </p>
     <p>
         <input type="submit" class="button" value="Me connecter"/>

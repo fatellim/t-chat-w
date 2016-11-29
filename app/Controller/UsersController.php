@@ -44,7 +44,7 @@ class UsersController extends BaseController
 		// et on le redirige vers la page d'acceuil.
 
 
-
+				if(!empty($_POST)){
 		//Si le pseudo est vide on ajoute un message d'erreur .
 					if(empty($_POST['pseudo'])){
 
@@ -52,7 +52,7 @@ class UsersController extends BaseController
 					}
 
 		//Si le mot de passe est vide on ajoute un message d'erreur
-					if(empty($_POST['mdp'])){
+					if(empty($_POST['mot_de_passe'])){
 
 					$this->getFlashMessenger()->error('veuillez rentrer un Mot de passe');
 
@@ -80,8 +80,9 @@ class UsersController extends BaseController
 
 					}
 
+				}
 				
-			$this->show('users/login', array('datas'=>isset($_POST) ? $_POST : array()));
+			$this->show('users/login', array('datas' => isset($_POST) ? $_POST : array()));
 
 	}
 
@@ -96,16 +97,32 @@ class UsersController extends BaseController
 
 		if(!empty($_POST)){
 
+			//On indique à respecter validation que nos règles de validation seront accesible depuis le namespace Rules
+			v::with('Validation\Rules');
+
 			$Validators = array(
 
-				'pseudo' => v::length(3,50)->alnum()->noWhiteSpace()->setName('Nom d\'utilisateur'),
-				'email'  => v::email()->setName('Email'),
+
+				'pseudo' => v::length(3,50)->alnum()->usernameNotExists()->noWhiteSpace()->setName('Nom d\'utilisateur'),
+				'email'  => v::email()->emailNotExists()->setName('Email'),
 				'mot_de_passe' => v::length(3,20)->noWhiteSpace()->alnum()->setName('Mot de Passe'),
+				'sexe'   => v::in(['femme', 'homme', 'non-defini']),
 				'avatar' => v::optional(v::image()->size('1MB')->uploaded())
 			);
 			
 
 			$datas = $_POST;
+
+			if(!empty($_FILES['avatar']['tmp_name'])){
+
+				//Je stock en donnée a valider le chemin vers la localisation temporairede l'avatar.
+				$datas['avatar'] = $_FILES['avatar']['tmp_name'];
+			}else{
+
+				//Sinon je laisse le champs vide 
+				//realpath('avatars/default.png') --> Chemin réel
+				$datas['avatar']= '';
+			}
 
 			foreach ($Validators as $field => $validator){
 
@@ -115,7 +132,7 @@ class UsersController extends BaseController
 					
 				//On essaye de valider la donnée et si une exeption se produit le bloc cath sera executé ; 
 
-				$validator->assert($datas[$field]);
+				$validator->assert(isset($datas[$field]) ? $datas[$field] : '' );
 
 				}catch(NestedValidationException $ex){
 
@@ -126,6 +143,45 @@ class UsersController extends BaseController
 				}//Fin try/Catch
 
 			}//Fin foreach
+
+			if(!$this->getFlashMessenger()->hasErrors()){
+				//Si on n'a pas rencontre d'erreurs on procède à l'insertion du nouvel utilisateur et deplace l'avatar, puis hacher le mot de passe.
+
+				//On hache le mdp, on utilise pour cela le model AuthentificationModel pour rester cohérent avec le framework.
+				$auth = new AuthentificationModel();
+
+				$datas['mot_de_passe'] = $auth->hashPassword($datas['mot_de_passe']);
+
+				//On deplace l'avatar vers le dossier avatar.
+
+				$initialAvatar =  $_FILES['avatar']['tmp_name'];
+
+				$avatarNewName = md5(time().uniqid());
+
+				//realpath : prend le chemin relatif actuel 
+				$targetPath = realpath('assets/uploads/'.$avatarNewName);
+
+				//deplace le dossier en apache vers une destination !
+				move_uploaded_file($initialAvatar, $avatarNewName);
+
+				//on met a jour le nouveau nom de l'avatar dans $datas
+
+				$datas['avatar']= $avatarNewName;
+
+				$utilisateurModel = new UtilisateursModel();
+
+				unset($datas['send']);
+
+				$userInfos = $utilisateurModel->insert($datas);
+
+				$auth->logUserIn($userInfos);
+
+				$this->getFlashMessenger()->success('Vous vous ête bien inscrit à tchat ! ');
+
+				$this->redirectToRoute('default_home');
+
+
+			}
 
 		}//Fin $post
 

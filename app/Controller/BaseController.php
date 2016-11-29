@@ -44,13 +44,13 @@ class BaseController extends Controller
 		$this->engine->addData(
 
 			[
-				'w_user' 		  => $this->getUser(),
-				'w_current_route' => $app->getCurrentRoute(),
-				'w_site_name'	  => $app->getConfig('site_name'),
-				'salons'		  => $salonModels->findAll(),
-				'fmsg'		  	  => $this->fmsg
+			'w_user' 		  => $this->getUser(),
+			'w_current_route' => $app->getCurrentRoute(),
+			'w_site_name'	  => $app->getConfig('site_name'),
+			'salons'		  => $salonModels->findAll(),
+			'fmsg'		  	  => $this->fmsg
 			]
-		);
+			);
 
 	}
 
