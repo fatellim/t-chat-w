@@ -31,9 +31,26 @@
 			    <li>
 				    <a href="<?= $this->url('users_list') ?>" title="Liste des utilisateurs ">Liste des utilisateurs</a>		    	
 			    </li>
+			<?php if ($w_user) : ?>
+
 			    <li>
-			    	<a href="<?php echo $this->url('logout');?>" title="Se deconnecter de T'chat">Deconnexion</a>		    	
+			    	<a href="<?php echo $this->url('logout') ?>" title="Se deconnecter de T'chat" >Deconnexion</a>		    	
 			    </li>
+
+			<?php endif ?>
+
+			<?php if (!$w_user) : ?>
+
+			    <li>
+			    	<a href="<?php echo $this->url('login') ?>" title="Se connecter à T'chat" >Connexion</a>		    	
+			    </li>
+			    <li>
+			    	<a href="<?php echo $this->url('register') ?>" title="Inscription " >Inscription</a>		    	
+			    </li>
+
+
+			<?php endif ?>
+
 		    </ul>
 		</nav>
 	</aside><main>
