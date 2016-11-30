@@ -153,20 +153,27 @@ class UsersController extends BaseController
 				$datas['mot_de_passe'] = $auth->hashPassword($datas['mot_de_passe']);
 
 				//On deplace l'avatar vers le dossier avatar.
+				if(!empty($_FILES['avatar']['tmp_name'])){
 
-				$initialAvatar =  $_FILES['avatar']['tmp_name'];
+					$initialAvatar =  $_FILES['avatar']['tmp_name']
 
-				$avatarNewName = md5(time().uniqid());
+					$avatarNewName = md5(time().uniqid());
 
-				//realpath : prend le chemin relatif actuel 
-				$targetPath = realpath('assets/uploads/'.$avatarNewName);
+					//realpath : prend le chemin relatif actuel 
+					$targetPath = realpath('assets/uploads/');
 
-				//deplace le dossier en apache vers une destination !
-				move_uploaded_file($initialAvatar, $avatarNewName);
+					//deplace le dossier en apache vers une destination !
+					move_uploaded_file($initialAvatar, $targetPath .'/'.$avatarNewName);
 
-				//on met a jour le nouveau nom de l'avatar dans $datas
+					//on met a jour le nouveau nom de l'avatar dans $datas
 
-				$datas['avatar']= $avatarNewName;
+					$datas['avatar']= $avatarNewName;
+				}else{
+
+					$datas['avatar']='default.png';
+				}
+				
+
 
 				$utilisateurModel = new UtilisateursModel();
 
