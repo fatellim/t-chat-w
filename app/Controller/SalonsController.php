@@ -9,25 +9,57 @@ use Model\MessagesModel;
 class SalonsController extends BaseController
 {
 
-
-
 	public function viewSalon($id){
-
-		
+	
 		$salonsModel = new SalonsModel();
 		$salon = $salonsModel->find($id);
 
-
 		$messagesModel = new MessagesModel();
 		
+			if(!empty($_POST['message'])){
+
+				if($this->getUser()){
+
+					$user = $this->getUser();
+
+					$datas = [
+
+						'corps' => $_POST['message'],
+						'date_creation' => date('Y-m-d H:i:s'),
+						'date_modification' => date('Y-m-d H:i:s'),
+						'id_utilisateur' => $user['id'],
+						'id_salon' => $id
+
+						];
+						
+				$messagesModel->insert($datas);
+
+
+				}else{
+
+					$this->getFlashMessager()->error('Tu dois être connecter avant d\envoyer un message !');
+				}
+			}
 		
 		$messages = $messagesModel -> searchAllWithUserInfos($id);
 
+		$this->show('salons/see', array('salon' => $salon, 'messages' => $messages));
 
+		
+	}
 
-		$this->show('salons/see', array('salon'=>$salon, 'messages' => $messages));
+	public function newMessages($idSalon, $idMessage){
+
+		$messagesModel = new MessagesModel;
+
+		$messages = $messagesModel->searchAllWithUserInfos($idSalon, $idMessage);
+
+		$this->show('salons/newmessages', array('messages' => $messages));
+
 
 	}
+
+
 
 }
 

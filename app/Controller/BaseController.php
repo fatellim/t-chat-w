@@ -25,7 +25,6 @@ class BaseController extends Controller
 
 	public function __construct(){
 
-
 		//Je stock dans la variable de class engine une instance de league\plates\engine alors que cette instance etait crée directement dans la méthode show() de controller.
 
 		$this->engine = new \League\Plates\Engine(self::PATH_VIEWS);

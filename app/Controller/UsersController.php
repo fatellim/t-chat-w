@@ -27,6 +27,11 @@ class UsersController extends BaseController
 
 
 		*/
+
+			//Allowto elle dit que a partir de cette ligne la tu peux y acceder que si tu est ... Gere les autorisations
+			
+			$this->allowTo(['admin', 'superadmin']);
+				
 				$userModel = new UtilisateursModel();
 
 				$usersList = $userModel->findAll();
@@ -107,7 +112,7 @@ class UsersController extends BaseController
 				'email'  => v::email()->emailNotExists()->setName('Email'),
 				'mot_de_passe' => v::length(3,20)->noWhiteSpace()->alnum()->setName('Mot de Passe'),
 				'sexe'   => v::in(['femme', 'homme', 'non-defini']),
-				'avatar' => v::optional(v::image()->size('1MB')->uploaded())
+				'avatar' => v::optional(v::image()->size('0','1MB')->uploaded())
 			);
 			
 
@@ -155,7 +160,7 @@ class UsersController extends BaseController
 				//On deplace l'avatar vers le dossier avatar.
 				if(!empty($_FILES['avatar']['tmp_name'])){
 
-					$initialAvatar =  $_FILES['avatar']['tmp_name']
+					$initialAvatar =  $_FILES['avatar']['tmp_name'];
 
 					$avatarNewName = md5(time().uniqid());
 
@@ -168,6 +173,7 @@ class UsersController extends BaseController
 					//on met a jour le nouveau nom de l'avatar dans $datas
 
 					$datas['avatar']= $avatarNewName;
+
 				}else{
 
 					$datas['avatar']='default.png';

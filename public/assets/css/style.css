@@ -105,6 +105,9 @@ label{
 
 .messages {
 	margin: 0px;
+	height: calc(100vh - 190px);
+	
+    overflow-y: scroll;
 }
 
 .messages li {
@@ -153,6 +156,27 @@ form input {
 	width: 90px;
 }
 
+.messages > li > *{
+	vertical-align: middle;
+}
+
+span.avatar{
+
+ display: inline-block;
+ width: 30px;
+ height: 30px;
+ border-radius: 999px;
+ vertical-align: bottom;
+ overflow: hidden; 
+
+}
+
+span.avatar img{
+
+	display: block;
+	max-width: 100%;
+
+}
 
 @media screen and (max-width: 720px){
 
@@ -199,6 +223,8 @@ form input {
 	}
 
 }
+
+
 
 
 
